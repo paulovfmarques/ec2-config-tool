@@ -1,6 +1,6 @@
 import { timer } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
-import { combineLatestWith, mergeMap, startWith } from 'rxjs/operators';
+import { combineLatestWith, mergeMap } from 'rxjs/operators';
 import { BASE_URL } from '_global';
 import { ec2Instances$, rawData$ } from '_store';
 
@@ -15,7 +15,6 @@ export function getEC2InstancesSubscription(vmGroupOptions: string) {
     .pipe(
       combineLatestWith(timer(1000)),
       mergeMap(([response]) => response.json()),
-      startWith(false),
     )
     .subscribe((data) => ec2Instances$.next(data));
 }

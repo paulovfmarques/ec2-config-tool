@@ -1,0 +1,11 @@
+.InstancesTable__wrapper {
+    height: 400px;
+    width: 530px;
+    padding: 24px;
+
+    @media screen and (max-width: 600px){
+        width: auto;
+        height: 360px;
+        padding: 8px;
+    }
+}

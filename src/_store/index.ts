@@ -15,11 +15,41 @@ export const selected$ = new BehaviorSubject<SelectedType>({
   operating_system: null,
 });
 
-export const ec2Instances$ = new BehaviorSubject<EC2InstancesType[] | boolean>([]);
+export const ec2Instances$ = new BehaviorSubject<EC2InstancesType[]>([]);
 
-function onlyUnique(value: string, index: number, self: string[]) {
+function onlyUnique(
+  value: string | number,
+  index: number,
+  self: (string | number)[],
+) {
   return self.indexOf(value) === index;
 }
+
+export const vCpuOptions$ = ec2Instances$.pipe(
+  map((ec2Instances) =>
+    (ec2Instances as EC2InstancesType[])
+      .map(({ vcpu }) => vcpu)
+      .filter(onlyUnique)
+      .sort((a, b) => a - b)
+      .map((uniqueVcpu) => ({
+        value: uniqueVcpu,
+        label: uniqueVcpu,
+      })),
+  ),
+);
+
+export const memoryOptions$ = ec2Instances$.pipe(
+  map((ec2Instances) =>
+    (ec2Instances as EC2InstancesType[])
+      .map(({ memory }) => memory)
+      .filter(onlyUnique)
+      .sort((a, b) => a - b)
+      .map((uniqueMemory) => ({
+        value: uniqueMemory,
+        label: uniqueMemory,
+      })),
+  ),
+);
 
 export const location$ = rawData$.pipe(
   map((data) =>

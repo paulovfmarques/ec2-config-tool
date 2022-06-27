@@ -1,36 +1,39 @@
-import { useMemo } from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { EC2InstancesType } from '_types';
+import './InstancesTable.styles.scss';
+import React, { useMemo, useState } from 'react';
+import Select from 'react-select';
+import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
 import { useObservableState } from 'observable-hooks';
-import { ec2Instances$ } from '_store';
+import { ec2Instances$, vCpuOptions$, memoryOptions$ } from '_store';
 
-const fallbackData = [
-  {
-    id: 0,
-    server_name: 'Loading...',
-    vcpu: 'Loading...',
-    memory: 'Loading...',
-    pricing: 'Loading...',
-    recurring: 'Loading...',
-  },
-];
+function InstancesTable() {
+  const [selectedRowsIDs, setSelectedRowsIDs] = useState<GridRowId[]>([]);
+  const [selectedVcpu, setSelectedVcpu] = useState<number | null>();
+  const [selectedMemory, setSelectedMemory] = useState<number | null>();
 
-export default function InstancesTable() {
   const ec2Instances = useObservableState(ec2Instances$);
+  const vCpuOptions = useObservableState(vCpuOptions$);
+  const memoryOptions = useObservableState(memoryOptions$);
 
   const mappedRows = useMemo(
     () =>
-      !ec2Instances
-        ? fallbackData
-        : (ec2Instances as EC2InstancesType[]).map((instance) => ({
-            id: instance.server_name.split(' ')[0],
-            server_name: instance.server_name.split(' ')[0],
-            vcpu: instance.vcpu,
-            memory: instance.memory,
-            pricing: instance.cashflows[0].value_per_server, // TODO: make it so there can be many cashflows
-            recurring: instance.cashflows[0].recurring,
-          })),
-    [ec2Instances],
+      ec2Instances
+        .map((instance) => ({
+          id: instance.server_name,
+          server_name: instance.server_name.split(' ')[0],
+          vcpu: instance.vcpu,
+          memory: instance.memory,
+          pricing: instance.cashflows[0].value_per_server, // TODO: make it so there can be many cashflows
+          recurring: instance.cashflows[0].recurring,
+        }))
+        .filter(({ vcpu }) => {
+          if (!selectedVcpu) return true;
+          return vcpu === selectedVcpu;
+        })
+        .filter(({ memory }) => {
+          if (!selectedMemory) return true;
+          return memory === selectedMemory;
+        }),
+    [ec2Instances, selectedVcpu, selectedMemory],
   );
 
   const columns: GridColDef[] = [
@@ -47,33 +50,48 @@ export default function InstancesTable() {
       width: 150,
       headerAlign: 'center',
     },
-    {
-      field: 'pricing',
-      headerName: 'Pricing $',
-      type: 'number',
-      width: 150,
-      headerAlign: 'center',
-    },
-    {
-      field: 'recurring',
-      headerName: 'Recurring',
-      sortable: false,
-      width: 150,
-      headerAlign: 'center',
-    },
   ];
 
   return (
-    <div style={{ height: 570, width: 735 }}>
+    <div className="InstancesTable__wrapper">
+      <div className="InstanceGroupSelector__field">
+        <Select
+          aria-label="vCpu options"
+          isClearable
+          isSearchable
+          onChange={(a) => setSelectedVcpu(a?.value)}
+          options={vCpuOptions}
+          isDisabled={!vCpuOptions}
+        />
+      </div>
+      <div className="InstanceGroupSelector__field">
+        <Select
+          aria-label="Memory options"
+          isClearable
+          isSearchable
+          onChange={(a) => setSelectedMemory(a?.value)}
+          options={memoryOptions}
+          isDisabled={!memoryOptions}
+        />
+      </div>
       <DataGrid
         rows={mappedRows}
         columns={columns}
         rowHeight={45}
-        pageSize={10}
+        pageSize={5}
+        rowsPerPageOptions={[5]}
         pagination
-        onRowClick={(params, event, details) => {
-          console.log('params', params);
-          console.log('details', details);
+        checkboxSelection
+        isRowSelectable={(params) => {
+          if (
+            selectedRowsIDs.length === 2 &&
+            !selectedRowsIDs.includes(params.id)
+          )
+            return false;
+          return true;
+        }}
+        onSelectionModelChange={(a) => {
+          setSelectedRowsIDs(a);
         }}
         sx={{
           boxShadow: 2,
@@ -86,3 +104,5 @@ export default function InstancesTable() {
     </div>
   );
 }
+
+export default React.memo(InstancesTable);

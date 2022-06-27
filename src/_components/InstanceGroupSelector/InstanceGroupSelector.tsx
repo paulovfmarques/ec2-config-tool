@@ -13,6 +13,7 @@ export default function InstanceGroupSelector() {
       {/** LOCATION SELECTOR */}
       <div className="InstanceGroupSelector__field">
         <Select
+          aria-label="Location options"
           isClearable
           isSearchable
           onChange={(a) =>
@@ -21,10 +22,11 @@ export default function InstanceGroupSelector() {
           options={location}
         />
       </div>
-      
+
       {/** FAMILY SELECTOR */}
       <div className="InstanceGroupSelector__field">
         <Select
+          aria-label="Type options"
           isClearable
           isSearchable
           onChange={(a) =>
@@ -33,10 +35,11 @@ export default function InstanceGroupSelector() {
           options={family}
         />
       </div>
-      
+
       {/** OS SELECTOR */}
       <div className="InstanceGroupSelector__field">
         <Select
+          aria-label="Operating system options"
           isClearable
           isSearchable
           onChange={(a) =>
