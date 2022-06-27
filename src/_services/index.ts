@@ -13,8 +13,8 @@ export function getRawDataSubscrition() {
 export function getEC2InstancesSubscription(vmGroupOptions: string) {
   return fromFetch(`${BASE_URL}/${vmGroupOptions}`)
     .pipe(
-      combineLatestWith(timer(1000)),
-      mergeMap(([response]) => response.json()),
+      // combineLatestWith(timer(1000)),
+      mergeMap((response) => response.json()),
     )
     .subscribe((data) => ec2Instances$.next(data));
 }
