@@ -15,7 +15,7 @@ export const selected$ = new BehaviorSubject<SelectedType>({
   operating_system: null,
 });
 
-export const ec2Instances$ = new BehaviorSubject<EC2InstancesType[]>([]);
+export const ec2Instances$ = new BehaviorSubject<EC2InstancesType[] | boolean>([]);
 
 function onlyUnique(value: string, index: number, self: string[]) {
   return self.indexOf(value) === index;
