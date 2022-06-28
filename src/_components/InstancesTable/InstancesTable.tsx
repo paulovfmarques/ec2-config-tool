@@ -23,8 +23,7 @@ function InstancesTable() {
           server_name: instance.server_name.split(' ')[0],
           vcpu: instance.vcpu,
           memory: instance.memory,
-          pricing: instance.cashflows[0].value_per_server, // TODO: make it so there can be many cashflows
-          recurring: instance.cashflows[0].recurring,
+          details: 'show',
         }))
         .filter(({ vcpu }) => {
           if (!selectedVcpu) return true;
@@ -49,6 +48,25 @@ function InstancesTable() {
       field: 'memory',
       headerName: 'Memory (GIB)',
       width: 150,
+      headerAlign: 'center',
+    },
+    {
+      field: 'details',
+      headerName: 'Details',
+      renderCell: (params) => (
+        <button
+          className="InstancesTable__details-button"
+          onClick={() =>
+            setSelectedRowsIDs([
+              selectedRowsIDs[selectedRowsIDs.length - 1],
+              params.row.id,
+            ])
+          }
+        >
+          {params.value}
+        </button>
+      ),
+      width: 90,
       headerAlign: 'center',
     },
   ];
@@ -87,10 +105,8 @@ function InstancesTable() {
           pageSize={5}
           rowsPerPageOptions={[5]}
           pagination
+          disableSelectionOnClick
           checkboxSelection
-          onRowClick={({ id }) => {
-            setSelectedRowsIDs([...selectedRowsIDs, id])
-          }}
           onSelectionModelChange={(_selection) => {
             // for future actions
           }}
@@ -103,8 +119,10 @@ function InstancesTable() {
           }}
         />
       </div>
-      <DetailsCard />
-      <DetailsCard />
+      <div style={{ display: 'flex', gap: '24px' }}>
+        <DetailsCard details={selectedRowsIDs} />
+        {/* <DetailsCard /> */}
+      </div>
     </div>
   );
 }

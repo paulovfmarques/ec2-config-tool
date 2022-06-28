@@ -24,15 +24,17 @@ function App() {
   }, [compositeSelection]);
 
   return (
-    <div className="App">
+    <>
       <Header />
-      <div className="App__row">
-        <InstanceGroupSelector />
+      <div className="App">
+        <div className="App__row">
+          <InstanceGroupSelector />
+        </div>
+        <div className="App__row">
+          <InstancesTable />
+        </div>
       </div>
-      <div className="App__row">
-        <InstancesTable />
-      </div>
-    </div>
+    </>
   );
 }
 
