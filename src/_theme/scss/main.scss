@@ -1,1 +1,15 @@
 @use './reset.scss';
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.App {
+  display: grid;
+  gap: 50px;
+  padding-bottom: 32px;
+}
+
+.App__row {
+  margin: 0 auto;
+}

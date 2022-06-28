@@ -1,6 +1,5 @@
-import { timer } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
-import { combineLatestWith, mergeMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { BASE_URL } from '_global';
 import { ec2Instances$, rawData$ } from '_store';
 

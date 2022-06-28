@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
 import { useObservableState } from 'observable-hooks';
 import { ec2Instances$, vCpuOptions$, memoryOptions$ } from '_store';
+import { DetailsCard } from '_components';
 
 function InstancesTable() {
   const [selectedRowsIDs, setSelectedRowsIDs] = useState<GridRowId[]>([]);
@@ -54,53 +55,56 @@ function InstancesTable() {
 
   return (
     <div className="InstancesTable__wrapper">
-      <div className="InstanceGroupSelector__field">
-        <Select
-          aria-label="vCpu options"
-          isClearable
-          isSearchable
-          onChange={(a) => setSelectedVcpu(a?.value)}
-          options={vCpuOptions}
-          isDisabled={!vCpuOptions}
+      <div className="InstancesTable__container">
+        <div className="InstancesTable__field-wrapper">
+          <div className="InstancesTable__field">
+            <Select
+              placeholder="vCPU"
+              aria-label="vCpu options"
+              isClearable
+              isSearchable
+              onChange={(a) => setSelectedVcpu(a?.value)}
+              options={vCpuOptions}
+              isDisabled={!vCpuOptions}
+            />
+          </div>
+          <div className="InstancesTable__field">
+            <Select
+              placeholder="Memory"
+              aria-label="Memory options"
+              isClearable
+              isSearchable
+              onChange={(a) => setSelectedMemory(a?.value)}
+              options={memoryOptions}
+              isDisabled={!memoryOptions}
+            />
+          </div>
+        </div>
+        <DataGrid
+          rows={mappedRows}
+          columns={columns}
+          rowHeight={45}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          pagination
+          checkboxSelection
+          onRowClick={({ id }) => {
+            setSelectedRowsIDs([...selectedRowsIDs, id])
+          }}
+          onSelectionModelChange={(_selection) => {
+            // for future actions
+          }}
+          sx={{
+            boxShadow: 2,
+            '& .MuiDataGrid-cell': {
+              cursor: 'pointer',
+              justifyContent: 'center',
+            },
+          }}
         />
       </div>
-      <div className="InstanceGroupSelector__field">
-        <Select
-          aria-label="Memory options"
-          isClearable
-          isSearchable
-          onChange={(a) => setSelectedMemory(a?.value)}
-          options={memoryOptions}
-          isDisabled={!memoryOptions}
-        />
-      </div>
-      <DataGrid
-        rows={mappedRows}
-        columns={columns}
-        rowHeight={45}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        pagination
-        checkboxSelection
-        isRowSelectable={(params) => {
-          if (
-            selectedRowsIDs.length === 2 &&
-            !selectedRowsIDs.includes(params.id)
-          )
-            return false;
-          return true;
-        }}
-        onSelectionModelChange={(a) => {
-          setSelectedRowsIDs(a);
-        }}
-        sx={{
-          boxShadow: 2,
-          '& .MuiDataGrid-cell': {
-            cursor: 'pointer',
-            justifyContent: 'center',
-          },
-        }}
-      />
+      <DetailsCard />
+      <DetailsCard />
     </div>
   );
 }

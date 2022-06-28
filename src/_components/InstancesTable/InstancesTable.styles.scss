@@ -1,11 +1,24 @@
 .InstancesTable__wrapper {
-    height: 400px;
-    width: 530px;
-    padding: 24px;
+  display: flex;
+  column-gap: 40px;
+}
 
-    @media screen and (max-width: 600px){
-        width: auto;
-        height: 360px;
-        padding: 8px;
-    }
+.InstancesTable__container {
+  height: 60vh;
+  width: 530px;
+
+  @media screen and (max-width: 600px) {
+    width: auto;
+    height: 360px;
+  }
+}
+
+.InstancesTable__field-wrapper {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+
+.InstancesTable__field {
+  width: 120px;
 }

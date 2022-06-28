@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useObservableState } from 'observable-hooks';
 import { compositeSelection$ } from '_store';
-import { InstanceGroupSelector, InstancesTable } from '_components';
+import { InstanceGroupSelector, InstancesTable, Header } from '_components';
 import { getEC2InstancesSubscription, getRawDataSubscrition } from '_services';
 
 function App() {
@@ -24,11 +24,15 @@ function App() {
   }, [compositeSelection]);
 
   return (
-    <>
-      <InstanceGroupSelector />
-
-      <InstancesTable />
-    </>
+    <div className="App">
+      <Header />
+      <div className="App__row">
+        <InstanceGroupSelector />
+      </div>
+      <div className="App__row">
+        <InstancesTable />
+      </div>
+    </div>
   );
 }
 
