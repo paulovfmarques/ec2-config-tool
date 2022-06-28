@@ -30,3 +30,11 @@ export type RawDataType = {
   location: string;
   operating_system: string;
 };
+
+export type TableRowsType = {
+  id: string;
+  server_name: string;
+  vcpu: number;
+  memory: number;
+  details: string;
+};

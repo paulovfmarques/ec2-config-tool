@@ -28,15 +28,24 @@ function App() {
       <Header />
       <div className="App">
         <div className="App__row">
-          <h1 className='App__title'>EC2 Config Tool</h1>
+          <h1 className="App__title">EC2 Config Tool</h1>
         </div>
+
         <div className="App__row App__description">
-          <p>Select a location, operating system and instance type to view the virtual machines available.</p>
-          <p>You can sort them out by vCPU and memory, and check the details for costs information.</p>
+          <p>
+            Select a location, operating system and instance type to view the
+            virtual machines available.
+          </p>
+          <p>
+            You can sort them out by vCPU and memory, and check the details for
+            costs information.
+          </p>
         </div>
+
         <div className="App__row">
           <InstanceGroupSelector />
         </div>
+
         <div className="App__row">
           <InstancesTable />
         </div>

@@ -17,6 +17,14 @@ export const selected$ = new BehaviorSubject<SelectedType>({
 
 export const ec2Instances$ = new BehaviorSubject<EC2InstancesType[]>([]);
 
+export const ec2InstancesWithLoading$ = new BehaviorSubject<{
+  data: EC2InstancesType[];
+  loading: boolean;
+}>({
+  data: [],
+  loading: false,
+});
+
 function onlyUnique(
   value: string | number,
   index: number,

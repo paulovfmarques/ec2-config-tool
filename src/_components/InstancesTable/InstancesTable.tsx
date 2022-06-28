@@ -3,15 +3,16 @@ import React, { useMemo, useState, useEffect } from 'react';
 import Select from 'react-select';
 import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
 import { useObservableState } from 'observable-hooks';
-import { ec2Instances$, vCpuOptions$, memoryOptions$ } from '_store';
+import { ec2InstancesWithLoading$, vCpuOptions$, memoryOptions$ } from '_store';
 import { DetailsCard } from '_components';
+import { TableRowsType } from '_types';
 
 function InstancesTable() {
   const [selectedRowsID, setSelectedRowsID] = useState<GridRowId | null>(null);
   const [selectedVcpu, setSelectedVcpu] = useState<number | null>();
   const [selectedMemory, setSelectedMemory] = useState<number | null>();
 
-  const ec2Instances = useObservableState(ec2Instances$, []);
+  const ec2Instances = useObservableState(ec2InstancesWithLoading$);
   const vCpuOptions = useObservableState(vCpuOptions$);
   const memoryOptions = useObservableState(memoryOptions$);
 
@@ -19,62 +20,66 @@ function InstancesTable() {
     setSelectedRowsID(null);
   }, [ec2Instances]);
 
-  const mappedRows = useMemo(
-    () =>
-      ec2Instances
-        .map((instance) => ({
-          id: instance.server_name,
-          server_name: instance.server_name.split(' ')[0],
-          vcpu: instance.vcpu,
-          memory: instance.memory,
-          details: 'show',
-        }))
-        .filter(({ vcpu }) => {
-          if (!selectedVcpu) return true;
-          return vcpu === selectedVcpu;
-        })
-        .filter(({ memory }) => {
-          if (!selectedMemory) return true;
-          return memory === selectedMemory;
-        }),
-    [ec2Instances, selectedVcpu, selectedMemory],
-  );
+  const mappedRows: TableRowsType[] =
+    useMemo(
+      () =>
+        ec2Instances.data
+          ?.map((instance) => ({
+            id: instance.server_name,
+            server_name: instance.server_name.split(' ')[0],
+            vcpu: instance.vcpu,
+            memory: instance.memory,
+            details: 'show',
+          }))
+          .filter(({ vcpu }) => {
+            if (!selectedVcpu) return true;
+            return vcpu === selectedVcpu;
+          })
+          .filter(({ memory }) => {
+            if (!selectedMemory) return true;
+            return memory === selectedMemory;
+          }),
+      [ec2Instances, selectedVcpu, selectedMemory],
+    ) || [];
 
-  const columns: GridColDef[] = [
-    {
-      field: 'server_name',
-      headerName: 'Server',
-      width: 150,
-      headerAlign: 'center',
-    },
-    { field: 'vcpu', headerName: 'vCPU', width: 110, headerAlign: 'center' },
-    {
-      field: 'memory',
-      headerName: 'Memory (GIB)',
-      width: 150,
-      headerAlign: 'center',
-    },
-    {
-      field: 'details',
-      headerName: 'Details',
-      renderCell: (params) => (
-        <button
-          className={`
+  const columns: GridColDef[] = useMemo(
+    () => [
+      {
+        field: 'server_name',
+        headerName: 'Server',
+        width: 150,
+        headerAlign: 'center',
+      },
+      { field: 'vcpu', headerName: 'vCPU', width: 110, headerAlign: 'center' },
+      {
+        field: 'memory',
+        headerName: 'Memory (GIB)',
+        width: 150,
+        headerAlign: 'center',
+      },
+      {
+        field: 'details',
+        headerName: 'Details',
+        renderCell: (params) => (
+          <button
+            className={`
           InstancesTable__details-button
           ${
             selectedRowsID === params.row.id &&
             'InstancesTable__details--active'
           }
           `}
-          onClick={() => setSelectedRowsID(params.row.id)}
-        >
-          {params.value}
-        </button>
-      ),
-      width: 90,
-      headerAlign: 'center',
-    },
-  ];
+            onClick={() => setSelectedRowsID(params.row.id)}
+          >
+            {params.value}
+          </button>
+        ),
+        width: 90,
+        headerAlign: 'center',
+      },
+    ],
+    [selectedRowsID, setSelectedRowsID],
+  );
 
   return (
     <div className="InstancesTable__wrapper">
@@ -112,6 +117,7 @@ function InstancesTable() {
           </div>
         </div>
         <DataGrid
+          loading={ec2Instances.loading}
           rows={mappedRows}
           columns={columns}
           rowHeight={45}
@@ -124,7 +130,7 @@ function InstancesTable() {
             // for future actions
           }}
           sx={{
-            boxShadow: 2,
+            boxShadow: 1,
             '& .MuiDataGrid-cell': {
               cursor: 'pointer',
               justifyContent: 'center',
@@ -133,11 +139,11 @@ function InstancesTable() {
         />
       </div>
 
-      {selectedRowsID && ec2Instances.length > 0 && (
+      {selectedRowsID && ec2Instances.data.length > 0 && (
         <DetailsCard
           close={() => setSelectedRowsID(null)}
-          details={ec2Instances.filter(
-            (instance) => instance?.server_name === selectedRowsID,
+          details={ec2Instances.data?.filter(
+            (i) => i?.server_name === selectedRowsID,
           )}
         />
       )}

@@ -1,12 +1,27 @@
 import './InstanceGroupSelector.styles.scss';
+import { useMemo } from 'react';
 import Select from 'react-select';
 import { useObservableState } from 'observable-hooks';
-import { family$, location$, operatingSystem$, selected$ } from '_store';
+import {
+  compositeSelection$,
+  family$,
+  location$,
+  operatingSystem$,
+  selected$,
+} from '_store';
 
 export default function InstanceGroupSelector() {
   const location = useObservableState(location$, []);
   const family = useObservableState(family$, []);
   const operatingSystem = useObservableState(operatingSystem$, []);
+
+  const selected = useObservableState(selected$);
+  const compositeSelection = useObservableState(compositeSelection$, []);
+
+  const isAllOptionsSelected = useMemo(
+    () => selected?.family && selected?.location && selected?.operating_system,
+    [selected],
+  );
 
   return (
     <div className="InstanceGroupSelector__wrapper">
@@ -63,6 +78,9 @@ export default function InstanceGroupSelector() {
           options={operatingSystem}
         />
       </div>
+      {compositeSelection.length === 0 && isAllOptionsSelected && (
+        <p className="InstanceGroupSelector__warning">No instances found</p>
+      )}
     </div>
   );
 }
