@@ -1,10 +1,17 @@
 @use './reset.scss';
 
 body {
+  height: 100%;
   font-family: 'Roboto', sans-serif;
+  background: url('../../_assets/bg.webp');
+  background-size: cover;
+  background-blend-mode: multiply;
+  background-position: center;
 }
 
 * {
+  scrollbar-gutter: stable;
+
   &::-webkit-scrollbar {
     background: #d9d9d9;
     border-radius: 4px;
@@ -29,7 +36,7 @@ body {
 .App {
   display: grid;
   gap: 50px;
-  max-width: 1440px;
+  max-width: 1200px;
   margin: 0 auto;
   padding-top: 50px;
   padding-bottom: 32px;
@@ -39,4 +46,20 @@ body {
   width: 100%;
   padding: 0 32px;
   margin: 0 auto;
+}
+
+.App__title {
+  font-weight: 700;
+  font-size: 2rem;
+  color: #585858;
+}
+
+.App__description {
+  color: #585858;
+  font-size: 1rem;
+  line-height: 2;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  padding-top: 16px;
+  padding-bottom: 16px;
 }

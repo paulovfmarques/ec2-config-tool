@@ -59,7 +59,13 @@ function InstancesTable() {
       headerName: 'Details',
       renderCell: (params) => (
         <button
-          className="InstancesTable__details-button"
+          className={`
+          InstancesTable__details-button
+          ${
+            selectedRowsID === params.row.id &&
+            'InstancesTable__details--active'
+          }
+          `}
           onClick={() => setSelectedRowsID(params.row.id)}
         >
           {params.value}
@@ -129,6 +135,7 @@ function InstancesTable() {
 
       {selectedRowsID && ec2Instances.length > 0 && (
         <DetailsCard
+          close={() => setSelectedRowsID(null)}
           details={ec2Instances.filter(
             (instance) => instance?.server_name === selectedRowsID,
           )}

@@ -4,13 +4,17 @@ import { EC2InstancesType } from '_types';
 
 function DetailsCard({
   details: detailsArray,
+  close,
 }: {
   details: EC2InstancesType[];
+  close: () => void;
 }) {
   const [details] = useMemo(() => detailsArray, [detailsArray]);
 
   return (
     <div className="DetailsCard">
+      <div onClick={close} className="DetailsCard__close">x</div>
+
       <h2 className="DetailsCard__title">
         {details?.server_name.split(' ')[0]}
       </h2>

@@ -1,4 +1,5 @@
 .DetailsCard {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -11,7 +12,28 @@
   overflow-y: auto;
 }
 
+.DetailsCard__close {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background: #ebebeb;
+  }
+}
+
 .DetailsCard__title {
+  color: #585858;
   font-size: 1.25rem;
   font-weight: bold;
 }
