@@ -75,8 +75,12 @@ function InstancesTable() {
       <div className="InstancesTable__container">
         <div className="InstancesTable__field-wrapper">
           <div className="InstancesTable__field">
+            <label className="InstanceGroupSelector__label" htmlFor="vcpu">
+              vCPU
+            </label>
             <Select
-              placeholder="vCPU"
+              id="vcpu"
+              placeholder="Filter..."
               aria-label="vCpu options"
               isClearable
               isSearchable
@@ -86,8 +90,12 @@ function InstancesTable() {
             />
           </div>
           <div className="InstancesTable__field">
+            <label className="InstanceGroupSelector__label" htmlFor="memory">
+              Memory
+            </label>
             <Select
-              placeholder="Memory"
+              id="memory"
+              placeholder="Filter..."
               aria-label="Memory options"
               isClearable
               isSearchable

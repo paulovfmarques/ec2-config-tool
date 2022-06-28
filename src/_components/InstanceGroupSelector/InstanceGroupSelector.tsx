@@ -12,7 +12,11 @@ export default function InstanceGroupSelector() {
     <div className="InstanceGroupSelector__wrapper">
       {/** LOCATION SELECTOR */}
       <div className="InstanceGroupSelector__field">
+        <label className="InstanceGroupSelector__label" htmlFor="location">
+          Location
+        </label>
         <Select
+          id="location"
           aria-label="Location options"
           placeholder="Select location..."
           isClearable
@@ -26,7 +30,11 @@ export default function InstanceGroupSelector() {
 
       {/** FAMILY SELECTOR */}
       <div className="InstanceGroupSelector__field">
+        <label className="InstanceGroupSelector__label" htmlFor="type">
+          Type
+        </label>
         <Select
+          id="type"
           aria-label="Type options"
           placeholder="Select type..."
           isClearable
@@ -40,7 +48,11 @@ export default function InstanceGroupSelector() {
 
       {/** OS SELECTOR */}
       <div className="InstanceGroupSelector__field">
+        <label className="InstanceGroupSelector__label" htmlFor="os">
+          Operating system
+        </label>
         <Select
+          id="os"
           placeholder="Select operating system..."
           aria-label="Operating system options"
           isClearable
