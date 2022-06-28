@@ -1,5 +1,5 @@
 import './InstancesTable.styles.scss';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Select from 'react-select';
 import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
 import { useObservableState } from 'observable-hooks';
@@ -7,13 +7,17 @@ import { ec2Instances$, vCpuOptions$, memoryOptions$ } from '_store';
 import { DetailsCard } from '_components';
 
 function InstancesTable() {
-  const [selectedRowsIDs, setSelectedRowsIDs] = useState<GridRowId[]>([]);
+  const [selectedRowsID, setSelectedRowsID] = useState<GridRowId | null>(null);
   const [selectedVcpu, setSelectedVcpu] = useState<number | null>();
   const [selectedMemory, setSelectedMemory] = useState<number | null>();
 
-  const ec2Instances = useObservableState(ec2Instances$);
+  const ec2Instances = useObservableState(ec2Instances$, []);
   const vCpuOptions = useObservableState(vCpuOptions$);
   const memoryOptions = useObservableState(memoryOptions$);
+
+  useEffect(() => {
+    setSelectedRowsID(null);
+  }, [ec2Instances]);
 
   const mappedRows = useMemo(
     () =>
@@ -56,12 +60,7 @@ function InstancesTable() {
       renderCell: (params) => (
         <button
           className="InstancesTable__details-button"
-          onClick={() =>
-            setSelectedRowsIDs([
-              selectedRowsIDs[selectedRowsIDs.length - 1],
-              params.row.id,
-            ])
-          }
+          onClick={() => setSelectedRowsID(params.row.id)}
         >
           {params.value}
         </button>
@@ -119,10 +118,14 @@ function InstancesTable() {
           }}
         />
       </div>
-      <div style={{ display: 'flex', gap: '24px' }}>
-        <DetailsCard details={selectedRowsIDs} />
-        {/* <DetailsCard /> */}
-      </div>
+
+      {selectedRowsID && ec2Instances.length > 0 && (
+        <DetailsCard
+          details={ec2Instances.filter(
+            (instance) => instance?.server_name === selectedRowsID,
+          )}
+        />
+      )}
     </div>
   );
 }

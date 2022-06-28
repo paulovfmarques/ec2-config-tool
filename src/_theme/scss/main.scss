@@ -29,12 +29,14 @@ body {
 .App {
   display: grid;
   gap: 50px;
-  padding-bottom: 32px;
   max-width: 1440px;
   margin: 0 auto;
   padding-top: 50px;
+  padding-bottom: 32px;
 }
 
 .App__row {
+  width: 100%;
   padding: 0 32px;
+  margin: 0 auto;
 }
