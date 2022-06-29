@@ -1,6 +1,5 @@
 import './InstanceGroupSelector.styles.scss';
-import { useMemo } from 'react';
-import Select from 'react-select';
+import React, { useMemo, Suspense } from 'react';
 import { useObservableState } from 'observable-hooks';
 import {
   compositeSelection$,
@@ -9,6 +8,9 @@ import {
   operatingSystem$,
   selected$,
 } from '_store';
+import { SelectOptionsType } from '_types';
+
+const Select = React.lazy(() => import('react-select'));
 
 export default function InstanceGroupSelector() {
   const location = useObservableState(location$, []);
@@ -24,23 +26,28 @@ export default function InstanceGroupSelector() {
   );
 
   return (
-    <div className="InstanceGroupSelector__wrapper">
+    <div role="group" className="InstanceGroupSelector__wrapper">
       {/** LOCATION SELECTOR */}
       <div className="InstanceGroupSelector__field">
         <label className="InstanceGroupSelector__label" htmlFor="location">
           Location
         </label>
-        <Select
-          id="location"
-          aria-label="Location options"
-          placeholder="Select location..."
-          isClearable
-          isSearchable
-          onChange={(a) =>
-            selected$.next({ ...selected$.value, location: a?.value })
-          }
-          options={location}
-        />
+        <Suspense fallback="">
+          <Select
+            id="location"
+            aria-label="Location options"
+            placeholder="Select location..."
+            isClearable
+            isSearchable
+            onChange={(a) =>
+              selected$.next({
+                ...selected$.value,
+                location: (a as SelectOptionsType)?.value,
+              })
+            }
+            options={location}
+          />
+        </Suspense>
       </div>
 
       {/** FAMILY SELECTOR */}
@@ -48,17 +55,22 @@ export default function InstanceGroupSelector() {
         <label className="InstanceGroupSelector__label" htmlFor="type">
           Type
         </label>
-        <Select
-          id="type"
-          aria-label="Type options"
-          placeholder="Select type..."
-          isClearable
-          isSearchable
-          onChange={(a) =>
-            selected$.next({ ...selected$.value, family: a?.value })
-          }
-          options={family}
-        />
+        <Suspense fallback="">
+          <Select
+            id="type"
+            aria-label="Type options"
+            placeholder="Select type..."
+            isClearable
+            isSearchable
+            onChange={(a) =>
+              selected$.next({
+                ...selected$.value,
+                family: (a as SelectOptionsType)?.value,
+              })
+            }
+            options={family}
+          />
+        </Suspense>
       </div>
 
       {/** OS SELECTOR */}
@@ -66,17 +78,22 @@ export default function InstanceGroupSelector() {
         <label className="InstanceGroupSelector__label" htmlFor="os">
           Operating system
         </label>
-        <Select
-          id="os"
-          placeholder="Select operating system..."
-          aria-label="Operating system options"
-          isClearable
-          isSearchable
-          onChange={(a) =>
-            selected$.next({ ...selected$.value, operating_system: a?.value })
-          }
-          options={operatingSystem}
-        />
+        <Suspense fallback="">
+          <Select
+            id="os"
+            placeholder="Select operating system..."
+            aria-label="Operating system options"
+            isClearable
+            isSearchable
+            onChange={(a) =>
+              selected$.next({
+                ...selected$.value,
+                operating_system: (a as SelectOptionsType)?.value,
+              })
+            }
+            options={operatingSystem}
+          />
+        </Suspense>
       </div>
       {compositeSelection.length === 0 && isAllOptionsSelected && (
         <p className="InstanceGroupSelector__warning">No instances found</p>

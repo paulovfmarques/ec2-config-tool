@@ -38,3 +38,8 @@ export type TableRowsType = {
   memory: number;
   details: string;
 };
+
+export type SelectOptionsType = {
+  value: string;
+  label: string;
+};

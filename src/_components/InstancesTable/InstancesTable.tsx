@@ -1,16 +1,23 @@
 import './InstancesTable.styles.scss';
-import React, { useMemo, useState, useEffect } from 'react';
-import Select from 'react-select';
-import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
+import React, { useMemo, useState, useEffect, Suspense } from 'react';
+import { GridColDef, GridRowId } from '@mui/x-data-grid';
 import { useObservableState } from 'observable-hooks';
 import { ec2InstancesWithLoading$, vCpuOptions$, memoryOptions$ } from '_store';
 import { DetailsCard } from '_components';
-import { TableRowsType } from '_types';
+import { TableRowsType, SelectOptionsType } from '_types';
+
+const DataGrid = React.lazy(() =>
+  import('@mui/x-data-grid').then((module) => ({ default: module.DataGrid })),
+);
+
+const Select = React.lazy(() => import('react-select'));
 
 function InstancesTable() {
   const [selectedRowsID, setSelectedRowsID] = useState<GridRowId | null>(null);
-  const [selectedVcpu, setSelectedVcpu] = useState<number | null>();
-  const [selectedMemory, setSelectedMemory] = useState<number | null>();
+  const [selectedVcpu, setSelectedVcpu] = useState<string | number | null>();
+  const [selectedMemory, setSelectedMemory] = useState<
+    string | number | null
+  >();
 
   const ec2Instances = useObservableState(ec2InstancesWithLoading$);
   const vCpuOptions = useObservableState(vCpuOptions$);
@@ -89,54 +96,64 @@ function InstancesTable() {
             <label className="InstanceGroupSelector__label" htmlFor="vcpu">
               vCPU
             </label>
-            <Select
-              id="vcpu"
-              placeholder="Filter..."
-              aria-label="vCpu options"
-              isClearable
-              isSearchable
-              onChange={(a) => setSelectedVcpu(a?.value)}
-              options={vCpuOptions}
-              isDisabled={!vCpuOptions}
-            />
+            <Suspense fallback="">
+              <Select
+                id="vcpu"
+                placeholder="Filter..."
+                aria-label="vCpu options"
+                isClearable
+                isSearchable
+                onChange={(a) =>
+                  setSelectedVcpu((a as SelectOptionsType)?.value)
+                }
+                options={vCpuOptions}
+                isDisabled={!vCpuOptions}
+              />
+            </Suspense>
           </div>
           <div className="InstancesTable__field">
             <label className="InstanceGroupSelector__label" htmlFor="memory">
               Memory
             </label>
-            <Select
-              id="memory"
-              placeholder="Filter..."
-              aria-label="Memory options"
-              isClearable
-              isSearchable
-              onChange={(a) => setSelectedMemory(a?.value)}
-              options={memoryOptions}
-              isDisabled={!memoryOptions}
-            />
+            <Suspense fallback="">
+              <Select
+                id="memory"
+                placeholder="Filter..."
+                aria-label="Memory options"
+                isClearable
+                isSearchable
+                onChange={(a) =>
+                  setSelectedMemory((a as SelectOptionsType)?.value)
+                }
+                options={memoryOptions}
+                isDisabled={!memoryOptions}
+              />
+            </Suspense>
           </div>
         </div>
-        <DataGrid
-          loading={ec2Instances.loading}
-          rows={mappedRows}
-          columns={columns}
-          rowHeight={45}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-          pagination
-          disableSelectionOnClick
-          checkboxSelection
-          onSelectionModelChange={(_selection) => {
-            // for future actions
-          }}
-          sx={{
-            boxShadow: 1,
-            '& .MuiDataGrid-cell': {
-              cursor: 'pointer',
-              justifyContent: 'center',
-            },
-          }}
-        />
+        <Suspense fallback="">
+          <DataGrid
+            loading={ec2Instances.loading}
+            rows={mappedRows}
+            columns={columns}
+            rowHeight={45}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            pagination
+            disableSelectionOnClick
+            checkboxSelection
+            onSelectionModelChange={(_selection) => {
+              // for future actions
+            }}
+            sx={{
+              boxShadow: 1,
+              '& .MuiDataGrid-cell': {
+                cursor: 'pointer',
+                justifyContent: 'center',
+              },
+            }}
+          />
+        </Suspense>
       </div>
 
       {selectedRowsID && ec2Instances.data.length > 0 && (

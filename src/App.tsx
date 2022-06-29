@@ -1,8 +1,18 @@
-import { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { useObservableState } from 'observable-hooks';
 import { compositeSelection$ } from '_store';
-import { InstanceGroupSelector, InstancesTable, Header } from '_components';
+import { Header } from '_components';
 import { getEC2InstancesSubscription, getRawDataSubscrition } from '_services';
+
+const InstancesTable = React.lazy(() =>
+  import('_components').then((module) => ({ default: module.InstancesTable })),
+);
+
+const InstanceGroupSelector = React.lazy(() =>
+  import('_components').then((module) => ({
+    default: module.InstanceGroupSelector,
+  })),
+);
 
 function App() {
   const compositeSelection = useObservableState(compositeSelection$, []);
@@ -43,11 +53,15 @@ function App() {
         </div>
 
         <div className="App__row">
-          <InstanceGroupSelector />
+          <Suspense fallback="">
+            <InstanceGroupSelector />
+          </Suspense>
         </div>
 
         <div className="App__row">
-          <InstancesTable />
+          <Suspense fallback="">
+            <InstancesTable />
+          </Suspense>
         </div>
       </div>
     </>
