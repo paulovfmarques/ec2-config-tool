@@ -37,7 +37,6 @@ export default function InstanceGroupSelector() {
             id="location"
             aria-label="Location options"
             placeholder="Select location..."
-            isClearable
             isSearchable
             onChange={(a) =>
               selected$.next({
@@ -60,7 +59,6 @@ export default function InstanceGroupSelector() {
             id="type"
             aria-label="Type options"
             placeholder="Select type..."
-            isClearable
             isSearchable
             onChange={(a) =>
               selected$.next({
@@ -83,7 +81,6 @@ export default function InstanceGroupSelector() {
             id="os"
             placeholder="Select operating system..."
             aria-label="Operating system options"
-            isClearable
             isSearchable
             onChange={(a) =>
               selected$.next({
