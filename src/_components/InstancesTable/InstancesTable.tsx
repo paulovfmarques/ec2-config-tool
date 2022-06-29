@@ -4,7 +4,7 @@ import { GridColDef, GridRowId } from '@mui/x-data-grid';
 import { useObservableState } from 'observable-hooks';
 import { ec2InstancesWithLoading$, vCpuOptions$, memoryOptions$ } from '_store';
 import { DetailsCard } from '_components';
-import { TableRowsType, SelectOptionsType } from '_types';
+import { TableRowsType, FilterOptionsType } from '_types';
 
 const DataGrid = React.lazy(() =>
   import('@mui/x-data-grid').then((module) => ({ default: module.DataGrid })),
@@ -14,10 +14,8 @@ const Select = React.lazy(() => import('react-select'));
 
 function InstancesTable() {
   const [selectedRowsID, setSelectedRowsID] = useState<GridRowId | null>(null);
-  const [selectedVcpu, setSelectedVcpu] = useState<string | number | null>();
-  const [selectedMemory, setSelectedMemory] = useState<
-    string | number | null
-  >();
+  const [selectedVcpu, setSelectedVcpu] = useState<number | null>();
+  const [selectedMemory, setSelectedMemory] = useState<number | null>();
 
   const ec2Instances = useObservableState(ec2InstancesWithLoading$);
   const vCpuOptions = useObservableState(vCpuOptions$);
@@ -105,7 +103,7 @@ function InstancesTable() {
                 isClearable
                 isSearchable
                 onChange={(a) =>
-                  setSelectedVcpu((a as SelectOptionsType)?.value)
+                  setSelectedVcpu((a as FilterOptionsType)?.value)
                 }
                 options={vCpuOptions}
                 isDisabled={!vCpuOptions}
@@ -126,7 +124,7 @@ function InstancesTable() {
                 isClearable
                 isSearchable
                 onChange={(a) =>
-                  setSelectedMemory((a as SelectOptionsType)?.value)
+                  setSelectedMemory((a as FilterOptionsType)?.value)
                 }
                 options={memoryOptions}
                 isDisabled={!memoryOptions}

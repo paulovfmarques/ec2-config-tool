@@ -43,3 +43,8 @@ export type SelectOptionsType = {
   value: string;
   label: string;
 };
+
+export type FilterOptionsType = {
+  value: number;
+  label: number;
+};

@@ -30,10 +30,7 @@ export const selected$ = new BehaviorSubject<SelectedType>({
   operating_system: null,
 });
 
-/** Stores all the instances resulting from a combination */
-export const ec2Instances$ = new BehaviorSubject<EC2InstancesType[]>([]);
-
-/** A structure to control the loading state for the ec2Instance's API request  */
+/** Stores all the instances resulting from a combination  */
 export const ec2InstancesWithLoading$ = new BehaviorSubject<{
   data: EC2InstancesType[];
   loading: boolean;
@@ -43,9 +40,9 @@ export const ec2InstancesWithLoading$ = new BehaviorSubject<{
 });
 
 /** Stores all unique vCPU values from the loaded combination */
-export const vCpuOptions$ = ec2Instances$.pipe(
+export const vCpuOptions$ = ec2InstancesWithLoading$.pipe(
   map((ec2Instances) =>
-    (ec2Instances as EC2InstancesType[])
+    (ec2Instances.data as EC2InstancesType[])
       .map(({ vcpu }) => vcpu)
       .filter(onlyUnique)
       .sort((a, b) => a - b)
@@ -57,9 +54,9 @@ export const vCpuOptions$ = ec2Instances$.pipe(
 );
 
 /** Stores all unique memory values from the loaded combination */
-export const memoryOptions$ = ec2Instances$.pipe(
+export const memoryOptions$ = ec2InstancesWithLoading$.pipe(
   map((ec2Instances) =>
-    (ec2Instances as EC2InstancesType[])
+    (ec2Instances.data as EC2InstancesType[])
       .map(({ memory }) => memory)
       .filter(onlyUnique)
       .sort((a, b) => a - b)
