@@ -29,7 +29,10 @@ export default function InstanceGroupSelector() {
     <div role="group" className="InstanceGroupSelector__wrapper">
       {/** LOCATION SELECTOR */}
       <div className="InstanceGroupSelector__field">
-        <label className="InstanceGroupSelector__label" htmlFor="location">
+        <label
+          className="InstanceGroupSelector__label InstanceGroupSelector__label--required"
+          htmlFor="location"
+        >
           Location
         </label>
         <Suspense fallback="">
@@ -51,7 +54,10 @@ export default function InstanceGroupSelector() {
 
       {/** FAMILY SELECTOR */}
       <div className="InstanceGroupSelector__field">
-        <label className="InstanceGroupSelector__label" htmlFor="type">
+        <label
+          className="InstanceGroupSelector__label InstanceGroupSelector__label--required"
+          htmlFor="type"
+        >
           Type
         </label>
         <Suspense fallback="">
@@ -73,7 +79,10 @@ export default function InstanceGroupSelector() {
 
       {/** OS SELECTOR */}
       <div className="InstanceGroupSelector__field">
-        <label className="InstanceGroupSelector__label" htmlFor="os">
+        <label
+          className="InstanceGroupSelector__label InstanceGroupSelector__label--required"
+          htmlFor="os"
+        >
           Operating system
         </label>
         <Suspense fallback="">

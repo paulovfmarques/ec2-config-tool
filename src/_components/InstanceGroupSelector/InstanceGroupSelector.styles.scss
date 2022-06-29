@@ -16,9 +16,20 @@
 }
 
 .InstanceGroupSelector__label {
+  position: relative;
   color: #585858;
   font-weight: 500;
   font-size: 0.95rem;
+}
+
+.InstanceGroupSelector__label--required {
+  &::after {
+    content: '*';
+    color: #c73939;
+    position: absolute;
+    right: -8px;
+    top: 0;
+  }
 }
 
 .InstanceGroupSelector__warning {
