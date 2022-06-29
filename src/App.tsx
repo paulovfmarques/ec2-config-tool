@@ -17,12 +17,14 @@ const InstanceGroupSelector = React.lazy(() =>
 function App() {
   const compositeSelection = useObservableState(compositeSelection$, []);
 
+  /** Fetch the json file containing the selectors' combinations */
   useEffect(() => {
     const subscription = getRawDataSubscrition();
 
     return () => subscription.unsubscribe();
   }, []);
 
+  /** Fetch the instances json file from a selected combination */
   useEffect(() => {
     if (compositeSelection[0]?.filename) {
       const subscription = getEC2InstancesSubscription(

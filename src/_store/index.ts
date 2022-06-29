@@ -7,24 +7,6 @@ type SelectedType = {
   operating_system?: string | null;
 };
 
-export const rawData$ = new BehaviorSubject<RawDataType[]>([]);
-
-export const selected$ = new BehaviorSubject<SelectedType>({
-  location: null,
-  family: null,
-  operating_system: null,
-});
-
-export const ec2Instances$ = new BehaviorSubject<EC2InstancesType[]>([]);
-
-export const ec2InstancesWithLoading$ = new BehaviorSubject<{
-  data: EC2InstancesType[];
-  loading: boolean;
-}>({
-  data: [],
-  loading: false,
-});
-
 function onlyUnique(
   value: string | number,
   index: number,
@@ -33,6 +15,34 @@ function onlyUnique(
   return self.indexOf(value) === index;
 }
 
+/** Combination: array of objects containing the combination of
+ * all possible values for location, family and operating_system.
+ * Also contains a unique file name used to fetch the instances with an API call
+ * */
+
+/** Stores the list of possible combinations*/
+export const rawData$ = new BehaviorSubject<RawDataType[]>([]);
+
+/** Stores the selected values from the 3 required fields*/
+export const selected$ = new BehaviorSubject<SelectedType>({
+  location: null,
+  family: null,
+  operating_system: null,
+});
+
+/** Stores all the instances resulting from a combination */
+export const ec2Instances$ = new BehaviorSubject<EC2InstancesType[]>([]);
+
+/** A structure to control the loading state for the ec2Instance's API request  */
+export const ec2InstancesWithLoading$ = new BehaviorSubject<{
+  data: EC2InstancesType[];
+  loading: boolean;
+}>({
+  data: [],
+  loading: false,
+});
+
+/** Stores all unique vCPU values from the loaded combination */
 export const vCpuOptions$ = ec2Instances$.pipe(
   map((ec2Instances) =>
     (ec2Instances as EC2InstancesType[])
@@ -46,6 +56,7 @@ export const vCpuOptions$ = ec2Instances$.pipe(
   ),
 );
 
+/** Stores all unique memory values from the loaded combination */
 export const memoryOptions$ = ec2Instances$.pipe(
   map((ec2Instances) =>
     (ec2Instances as EC2InstancesType[])
@@ -59,6 +70,7 @@ export const memoryOptions$ = ec2Instances$.pipe(
   ),
 );
 
+/** Stores all unique location values */
 export const location$ = rawData$.pipe(
   map((data) =>
     data
@@ -71,6 +83,7 @@ export const location$ = rawData$.pipe(
   ),
 );
 
+/** Stores all unique family values */
 export const family$ = rawData$.pipe(
   map((data) =>
     data
@@ -83,6 +96,7 @@ export const family$ = rawData$.pipe(
   ),
 );
 
+/** Stores all unique operating_system values */
 export const operatingSystem$ = rawData$.pipe(
   map((data) =>
     data
@@ -95,6 +109,7 @@ export const operatingSystem$ = rawData$.pipe(
   ),
 );
 
+/** Stores the combinations of all 3 selected input fields */
 export const compositeSelection$ = rawData$.pipe(
   combineLatestWith(selected$),
   map(([rawData, selection]) => {

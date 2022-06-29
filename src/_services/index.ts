@@ -11,9 +11,14 @@ export function getRawDataSubscrition() {
 }
 
 export function getEC2InstancesSubscription(vmGroupOptions: string) {
+  /** Setting initial value, for loading state control */
   ec2InstancesWithLoading$.next({ data: [], loading: true });
+
   return fromFetch(`${BASE_URL}/${vmGroupOptions}`)
     .pipe(
+      /** Since the API call is fast, we're delaying
+       * it so that the layout doesn't shift too quicly
+       *  from the load spinner */
       combineLatestWith(timer(500)),
       mergeMap(([response]) => response.json()),
     )

@@ -92,6 +92,7 @@ function InstancesTable() {
     <div className="InstancesTable__wrapper">
       <div className="InstancesTable__container">
         <div className="InstancesTable__field-wrapper">
+          {/** vCPU FILTER SELECTOR */}
           <div className="InstancesTable__field">
             <label className="InstanceGroupSelector__label" htmlFor="vcpu">
               vCPU
@@ -111,6 +112,8 @@ function InstancesTable() {
               />
             </Suspense>
           </div>
+
+          {/** MEMORY FILTER SELECTOR */}
           <div className="InstancesTable__field">
             <label className="InstanceGroupSelector__label" htmlFor="memory">
               Memory
@@ -131,6 +134,8 @@ function InstancesTable() {
             </Suspense>
           </div>
         </div>
+
+        {/** INSTANCES TABLE */}
         <Suspense fallback="">
           <DataGrid
             loading={ec2Instances.loading}
@@ -156,6 +161,7 @@ function InstancesTable() {
         </Suspense>
       </div>
 
+      {/** INSTANCE'S DETAILS CARD */}
       {selectedRowsID && ec2Instances.data.length > 0 && (
         <DetailsCard
           close={() => setSelectedRowsID(null)}
