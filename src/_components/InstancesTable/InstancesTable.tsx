@@ -153,7 +153,6 @@ function InstancesTable() {
             sx={{
               boxShadow: 1,
               '& .MuiDataGrid-cell': {
-                cursor: 'pointer',
                 justifyContent: 'center',
               },
             }}

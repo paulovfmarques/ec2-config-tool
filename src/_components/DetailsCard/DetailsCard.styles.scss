@@ -5,7 +5,7 @@
   width: 100%;
   max-width: 280px;
   background: #ffffff;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  border: 2px solid #d8d8d8;
   border-radius: 8px;
   padding: 10px 10px 18px 10px;
   gap: 24px;
@@ -72,7 +72,6 @@
   justify-content: center;
   align-items: center;
   background: linear-gradient(90deg, #9d5025 0%, #f68536 100%);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   padding: 8px;
 }
