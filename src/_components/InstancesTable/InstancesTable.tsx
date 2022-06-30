@@ -2,7 +2,13 @@ import './InstancesTable.styles.scss';
 import React, { useMemo, useState, useEffect, Suspense } from 'react';
 import { GridColDef, GridRowId } from '@mui/x-data-grid';
 import { useObservableState } from 'observable-hooks';
-import { ec2InstancesWithLoading$, vCpuOptions$, memoryOptions$ } from '_store';
+import {
+  ec2InstancesWithLoading$,
+  vCpuOptions$,
+  memoryOptions$,
+  compositeSelection$,
+  selected$,
+} from '_store';
 import { DetailsCard } from '_components';
 import { TableRowsType, FilterOptionsType } from '_types';
 
@@ -20,6 +26,18 @@ function InstancesTable() {
   const ec2Instances = useObservableState(ec2InstancesWithLoading$);
   const vCpuOptions = useObservableState(vCpuOptions$);
   const memoryOptions = useObservableState(memoryOptions$);
+
+  const selected = useObservableState(selected$);
+  const compositeSelection = useObservableState(compositeSelection$, []);
+
+  const isInstanceArrayEmpty = useMemo(
+    () =>
+      !!selected?.family &&
+      !!selected?.location &&
+      !!selected?.operating_system &&
+      compositeSelection.length === 0,
+    [selected, compositeSelection],
+  );
 
   useEffect(() => {
     setSelectedRowsID(null);
@@ -52,15 +70,23 @@ function InstancesTable() {
       {
         field: 'server_name',
         headerName: 'Server',
-        width: 150,
+        width: 200,
         headerAlign: 'center',
+        align: 'center',
       },
-      { field: 'vcpu', headerName: 'vCPU', width: 110, headerAlign: 'center' },
+      {
+        field: 'vcpu',
+        headerName: 'vCPU',
+        width: 180,
+        headerAlign: 'center',
+        align: 'right',
+      },
       {
         field: 'memory',
         headerName: 'Memory (GIB)',
-        width: 150,
+        width: 180,
         headerAlign: 'center',
+        align: 'right',
       },
       {
         field: 'details',
@@ -79,8 +105,9 @@ function InstancesTable() {
             {params.value}
           </button>
         ),
-        width: 90,
+        width: 160,
         headerAlign: 'center',
+        align: 'center',
       },
     ],
     [selectedRowsID, setSelectedRowsID],
@@ -137,7 +164,7 @@ function InstancesTable() {
         <Suspense fallback="">
           <DataGrid
             loading={ec2Instances.loading}
-            rows={mappedRows}
+            rows={isInstanceArrayEmpty ? [] : mappedRows}
             columns={columns}
             rowHeight={45}
             pageSize={5}
@@ -150,9 +177,6 @@ function InstancesTable() {
             }}
             sx={{
               boxShadow: 1,
-              '& .MuiDataGrid-cell': {
-                justifyContent: 'center',
-              },
             }}
           />
         </Suspense>

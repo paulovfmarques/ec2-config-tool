@@ -1,6 +1,7 @@
 import './DetailsCard.styles.scss';
 import React, { useMemo } from 'react';
 import { EC2InstancesType } from '_types';
+import ServerIcon from '_assets/servers.png';
 
 function DetailsCard({
   details: detailsArray,
@@ -13,9 +14,12 @@ function DetailsCard({
 
   return (
     <div className="DetailsCard">
-      <div onClick={close} className="DetailsCard__close">x</div>
+      <div onClick={close} className="DetailsCard__close">
+        x
+      </div>
 
       <h2 className="DetailsCard__title">
+        <img height={20} width={20} src={ServerIcon} alt="server icon" />
         {details?.server_name.split(' ')[0]}
       </h2>
 
@@ -53,7 +57,7 @@ function DetailsCard({
 
       <div className="DetailsCard__summary-wrapper">
         <details open className="DetailsCard__summary">
-          <summary>Costs</summary>
+          <summary>Cash flows</summary>
           {details?.cashflows.map((cashflow) => (
             <div key={cashflow?.flowname}>
               <div className="DetailsCard__details-container">

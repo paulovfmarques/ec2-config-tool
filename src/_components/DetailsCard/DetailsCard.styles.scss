@@ -3,13 +3,15 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 280px;
+  height: 390px;
+  max-width: 295px;
   background: #ffffff;
   border: 2px solid #d8d8d8;
   border-radius: 8px;
   padding: 10px 10px 18px 10px;
-  gap: 24px;
+  gap: 16px;
   overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .DetailsCard__close {
@@ -33,9 +35,12 @@
 }
 
 .DetailsCard__title {
+  display: flex;
+  align-items: center;
   color: #585858;
   font-size: 1.25rem;
   font-weight: bold;
+  gap: 8px;
 }
 
 .DetailsCard__description-background {
@@ -47,7 +52,7 @@
 .DetailsCard__details-container {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 7px;
 }
 
 .DetailsCard__details-wrapper {

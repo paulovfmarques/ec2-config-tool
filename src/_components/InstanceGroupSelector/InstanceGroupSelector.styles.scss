@@ -1,6 +1,7 @@
 .InstanceGroupSelector__wrapper {
   position: relative;
   display: flex;
+  justify-content: center;
   column-gap: 40px;
   width: 100%;
 
@@ -37,6 +38,10 @@
   color: #c73939;
   font-size: 0.85rem;
   font-style: italic;
-  left: 0;
-  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% + 16px);
+  padding: 6px 16px;
+  border-radius: 8px;
+  background-color: rgba(255, 124, 124, 0.2);
 }
